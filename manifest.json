@@ -1,0 +1,10 @@
+{
+  "name": "Microeconomics Exam Notes",
+  "short_name": "Micro Notes",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f2ea",
+  "theme_color": "#7a1f2b",
+  "icons": []
+}
