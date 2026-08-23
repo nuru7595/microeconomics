@@ -727,7 +727,103 @@
         padding: 8px 9px;
       }
     }
+    /* ===== DIAGRAM-PENDING MARKER STYLES ===== */
+    .qcard.needs-diagram > .qsummary {
+      background: repeating-linear-gradient(45deg, #fff8ec, #fff8ec 10px, #fdeecb 10px, #fdeecb 20px);
+      border-left: 4px solid #d98c2b;
+    }
+
+    .qcard.needs-diagram > .qsummary::after {
+      content: "🖼️ চিত্র বাকি";
+      margin-left: auto;
+      margin-right: 8px;
+      background: #d98c2b;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      order: 2;
+    }
+
+    .qcard.needs-diagram > .qsummary .chev {
+      order: 3;
+    }
+
+    .diagram-pending-banner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff3dc;
+      border: 1.5px dashed #d98c2b;
+      color: #8a5a12;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+    }
+
+    /* Placeholder box style to use once a diagram image is actually added.
+       Wrap the added <img> like: <div class="diagram-box"><img class="diagram-img" src="..." alt="..."></div> */
+    .diagram-box {
+      text-align: center;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    .diagram-box .diagram-img {
+      max-width: 100%;
+      border-radius: 6px;
+    }
+    .toc-item.needs-diagram {
+      border-left: 3px solid #d98c2b;
+      background: repeating-linear-gradient(45deg, #fbf4e6, #fbf4e6 8px, #fceccb 8px, #fceccb 16px);
+    }
+
+    .toc-item.needs-diagram:hover {
+      background: repeating-linear-gradient(45deg, #f3e5c8, #f3e5c8 8px, #f9dfab 8px, #f9dfab 16px);
+    }
+
+    .toc-badge {
+      margin-left: auto;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      opacity: 0.9;
+    }
+    /* ===== END DIAGRAM-PENDING MARKER STYLES ===== */
   </style>
+
+  <!-- ================= DIAGRAM ADDITION GUIDE (READ BEFORE EDITING) =================
+    Some questions below are marked incomplete because they still need a diagram/graph.
+    Marker 1: the details tag carries an extra CSS class named needs dash diagram (attached
+    directly to the qcard class, no space typed here on purpose to avoid this note being
+    matched by find/replace scripts). Marker 2: right after the qbody div opens, there is a
+    banner div with class diagram-pending-banner explaining the same thing to the reader.
+
+    WHEN A DIAGRAM IS ADDED FOR ONE OF THESE QUESTIONS, ALWAYS DO ALL OF THE FOLLOWING SO
+    STYLING STAYS CONSISTENT ACROSS THE WHOLE FILE (do not invent a new style):
+      1. Remove the needs-diagram class from that question's details tag.
+      2. Delete that question's diagram-pending-banner div entirely.
+      3. Insert the actual diagram wrapped EXACTLY like this (same class names every time):
+           <div class="diagram-box">
+             <img class="diagram-img" src="PATH_OR_DATA_URI" alt="short bengali description">
+           </div>
+         Place it inside the most relevant sub-section (usually right after the paragraph that
+         describes the curve/graph in words), not floating outside all sections.
+      4. Do not change fonts, colors, or add inline styles to the image - diagram-box and
+         diagram-img already match the maroon (#7a1f2b) / gold (#c8973a) theme of the file.
+      5. For "পার্থক্য" (difference) questions comparing two curves, use two diagram-box divs,
+         one inside each of the two relevant sub-sections, instead of squeezing both curves
+         into a single image.
+      6. Also update that question's entry in the Table of Contents (toc-grid): remove the
+         needs-diagram class from its <a class="toc-item needs-diagram" ...> tag, and remove
+         the <span class="toc-badge">🖼️</span> inside it, so the TOC badge disappears too.
+  ================================================================================= -->
 </head>
 
 <body>
@@ -780,10 +876,10 @@
 <a href="#q-7" class="toc-item" data-target="q-7" data-chapter="1"><span class="toc-text">1.17: পুঁজিবাদ কী? পুঁজিবাদের বিকাশ সম্পর্কে কার্ল মার্কসের বিশ্লেষণ ব্যাখ্যা কর।</span></a>
 <a href="#q-8" class="toc-item" data-target="q-8" data-chapter="1"><span class="toc-text">1.19: অর্থনৈতিক চিন্তাধারার বিকাশে কেইনসের অবদান আলোচনা কর।</span></a>
 <a href="#q-9" class="toc-item" data-target="q-9" data-chapter="2"><span class="toc-text">2.2: চাহিদা বিধির সীমাবদ্ধতা ব্যাখ্যা কর।</span></a>
-<a href="#q-10" class="toc-item" data-target="q-10" data-chapter="2"><span class="toc-text">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span></a>
-<a href="#q-11" class="toc-item" data-target="q-11" data-chapter="2"><span class="toc-text">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span></a>
-<a href="#q-12" class="toc-item" data-target="q-12" data-chapter="2"><span class="toc-text">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span></a>
-<a href="#q-13" class="toc-item" data-target="q-13" data-chapter="2"><span class="toc-text">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span></a>
+<a href="#q-10" class="toc-item needs-diagram" data-target="q-10" data-chapter="2"><span class="toc-text">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-11" class="toc-item needs-diagram" data-target="q-11" data-chapter="2"><span class="toc-text">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-12" class="toc-item needs-diagram" data-target="q-12" data-chapter="2"><span class="toc-text">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-13" class="toc-item needs-diagram" data-target="q-13" data-chapter="2"><span class="toc-text">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-14" class="toc-item" data-target="q-14" data-chapter="3"><span class="toc-text">3.3: রপ্তানি কোটার প্রভাব আলোচনা কর।</span></a>
 <a href="#q-15" class="toc-item" data-target="q-15" data-chapter="3"><span class="toc-text">3.5: এডাম স্মিথ কর্তৃক প্রদত্ত করের চারটি কানুন বা নীতিমালা আলোচনা কর।</span></a>
 <a href="#q-16" class="toc-item" data-target="q-16" data-chapter="3"><span class="toc-text">3.6: উত্তম কর ব্যবস্থার বৈশিষ্ট্যসমূহ ব্যাখ্যা কর।</span></a>
@@ -791,40 +887,40 @@
 <a href="#q-18" class="toc-item" data-target="q-18" data-chapter="4"><span class="toc-text">4.1: চাহিদার স্থিতিস্থাপকতা বলতে কী বুঝায়?</span></a>
 <a href="#q-19" class="toc-item" data-target="q-19" data-chapter="4"><span class="toc-text">4.5: স্থিতিস্থাপক ও অস্থিতিস্থাপক চাহিদার মধ্যে পার্থক্য লেখ।</span></a>
 <a href="#q-20" class="toc-item" data-target="q-20" data-chapter="4"><span class="toc-text">4.6: প্রযুক্তিগত পরিবর্তন বলতে কী বুঝ?</span></a>
-<a href="#q-21" class="toc-item" data-target="q-21" data-chapter="4"><span class="toc-text">4.8: সরলরৈখিক চাহিদা রেখার কোনো নির্দিষ্ট বিন্দুতে দাম স্থিতিস্থাপকতা নির্ণয় কর।</span></a>
+<a href="#q-21" class="toc-item needs-diagram" data-target="q-21" data-chapter="4"><span class="toc-text">4.8: সরলরৈখিক চাহিদা রেখার কোনো নির্দিষ্ট বিন্দুতে দাম স্থিতিস্থাপকতা নির্ণয় কর।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-22" class="toc-item" data-target="q-22" data-chapter="4"><span class="toc-text">4.10: জোগানের স্থিতিস্থাপকতার নির্ধারকসমূহ ব্যাখ্যা কর।</span></a>
 <a href="#q-23" class="toc-item" data-target="q-23" data-chapter="5"><span class="toc-text">5.2: ক্রমহ্রাসমান প্রান্তিক উপযোগ বিধিটি সংক্ষেপে আলোচনা কর।</span></a>
 <a href="#q-24" class="toc-item" data-target="q-24" data-chapter="5"><span class="toc-text">5.4: সমপ্রান্তিক উপযোগ বিধিটি ব্যাখ্যা কর।</span></a>
-<a href="#q-25" class="toc-item" data-target="q-25" data-chapter="5"><span class="toc-text">5.6: নিরপেক্ষ রেখার বৈশিষ্ট্যসমূহ লেখ।</span></a>
-<a href="#q-26" class="toc-item" data-target="q-26" data-chapter="5"><span class="toc-text">5.7: নিরপেক্ষ রেখা ও চাহিদা রেখার মধ্যে পার্থক্য লেখ।</span></a>
-<a href="#q-27" class="toc-item" data-target="q-27" data-chapter="5"><span class="toc-text">5.8: বাজেট রেখা কী?</span></a>
-<a href="#q-28" class="toc-item" data-target="q-28" data-chapter="5"><span class="toc-text">5.10: নিরপেক্ষ রেখা ও বাজেট রেখার মধ্যে পার্থক্য লেখ।</span></a>
-<a href="#q-29" class="toc-item" data-target="q-29" data-chapter="5"><span class="toc-text">5.14: প্রমাণ কর যে, দাম প্রভাব = আয় প্রভাব + পরিবর্তক প্রভাব।</span></a>
+<a href="#q-25" class="toc-item needs-diagram" data-target="q-25" data-chapter="5"><span class="toc-text">5.6: নিরপেক্ষ রেখার বৈশিষ্ট্যসমূহ লেখ।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-26" class="toc-item needs-diagram" data-target="q-26" data-chapter="5"><span class="toc-text">5.7: নিরপেক্ষ রেখা ও চাহিদা রেখার মধ্যে পার্থক্য লেখ।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-27" class="toc-item needs-diagram" data-target="q-27" data-chapter="5"><span class="toc-text">5.8: বাজেট রেখা কী?</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-28" class="toc-item needs-diagram" data-target="q-28" data-chapter="5"><span class="toc-text">5.10: নিরপেক্ষ রেখা ও বাজেট রেখার মধ্যে পার্থক্য লেখ।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-29" class="toc-item needs-diagram" data-target="q-29" data-chapter="5"><span class="toc-text">5.14: প্রমাণ কর যে, দাম প্রভাব = আয় প্রভাব + পরিবর্তক প্রভাব।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-30" class="toc-item" data-target="q-30" data-chapter="5"><span class="toc-text">5.16: পরিপূরক দ্রব্য ও বিকল্প দ্রব্যের মধ্যে পার্থক্যগুলো লেখ।</span></a>
-<a href="#q-31" class="toc-item" data-target="q-31" data-chapter="6"><span class="toc-text">6.3: সম-উৎপাদন রেখা ও নিরপেক্ষ রেখার মধ্যে পার্থক্য লেখ।</span></a>
+<a href="#q-31" class="toc-item needs-diagram" data-target="q-31" data-chapter="6"><span class="toc-text">6.3: সম-উৎপাদন রেখা ও নিরপেক্ষ রেখার মধ্যে পার্থক্য লেখ।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-32" class="toc-item" data-target="q-32" data-chapter="6"><span class="toc-text">6.5: উৎপাদন অপেক্ষক বলতে কী বুঝ?</span></a>
-<a href="#q-33" class="toc-item" data-target="q-33" data-chapter="6"><span class="toc-text">6.8: ক্রমহ্রাসমান প্রান্তিক উৎপাদন বিধি সমালোচনাসহ আলোচনা কর। এ বিধি কি শুধু কৃষি ক্ষেত্রে প্রযোজ্য?</span></a>
-<a href="#q-34" class="toc-item" data-target="q-34" data-chapter="6"><span class="toc-text">6.9: সম-উৎপাদন রেখার বৈশিষ্ট্যসমূহ আলোচনা কর।</span></a>
-<a href="#q-35" class="toc-item" data-target="q-35" data-chapter="6"><span class="toc-text">6.12: রিকার্ডোর খাজনা তত্ত্বটি সমালোচনাসহ ব্যাখ্যা কর।</span></a>
+<a href="#q-33" class="toc-item needs-diagram" data-target="q-33" data-chapter="6"><span class="toc-text">6.8: ক্রমহ্রাসমান প্রান্তিক উৎপাদন বিধি সমালোচনাসহ আলোচনা কর। এ বিধি কি শুধু কৃষি ক্ষেত্রে প্রযোজ্য?</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-34" class="toc-item needs-diagram" data-target="q-34" data-chapter="6"><span class="toc-text">6.9: সম-উৎপাদন রেখার বৈশিষ্ট্যসমূহ আলোচনা কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-35" class="toc-item needs-diagram" data-target="q-35" data-chapter="6"><span class="toc-text">6.12: রিকার্ডোর খাজনা তত্ত্বটি সমালোচনাসহ ব্যাখ্যা কর।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-36" class="toc-item" data-target="q-36" data-chapter="6"><span class="toc-text">6.15: ব্যয় সংকোচন কী?</span></a>
-<a href="#q-37" class="toc-item" data-target="q-37" data-chapter="6"><span class="toc-text">6.18: মোট ব্যয়, গড় ব্যয় ও প্রান্তিক ব্যয় এর মধ্যে সম্পর্ক দেখাও।</span></a>
-<a href="#q-38" class="toc-item" data-target="q-38" data-chapter="6"><span class="toc-text">6.20: স্বল্পকালীন গড় ব্যয় রেখা কী কী কারণে &#x27;U&#x27; আকৃতির হয়?</span></a>
-<a href="#q-39" class="toc-item" data-target="q-39" data-chapter="6"><span class="toc-text">6.21: দীর্ঘকালীন গড় ব্যয় রেখাকে এনভেলাপ রেখা বলা হয় কেন?</span></a>
+<a href="#q-37" class="toc-item needs-diagram" data-target="q-37" data-chapter="6"><span class="toc-text">6.18: মোট ব্যয়, গড় ব্যয় ও প্রান্তিক ব্যয় এর মধ্যে সম্পর্ক দেখাও।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-38" class="toc-item needs-diagram" data-target="q-38" data-chapter="6"><span class="toc-text">6.20: স্বল্পকালীন গড় ব্যয় রেখা কী কী কারণে &#x27;U&#x27; আকৃতির হয়?</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-39" class="toc-item needs-diagram" data-target="q-39" data-chapter="6"><span class="toc-text">6.21: দীর্ঘকালীন গড় ব্যয় রেখাকে এনভেলাপ রেখা বলা হয় কেন?</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-40" class="toc-item" data-target="q-40" data-chapter="7"><span class="toc-text">7.1: পূর্ণপ্রতিযোগিতা কী?</span></a>
 <a href="#q-41" class="toc-item" data-target="q-41" data-chapter="7"><span class="toc-text">7.2: পূর্ণপ্রতিযোগিতামূলক বাজারের শর্তাবলি আলোচনা কর।</span></a>
-<a href="#q-42" class="toc-item" data-target="q-42" data-chapter="7"><span class="toc-text">7.3: পূর্ণপ্রতিযোগিতায় ফার্মের স্বল্পকালীন ভারসাম্য বর্ণনা কর।</span></a>
-<a href="#q-43" class="toc-item" data-target="q-43" data-chapter="7"><span class="toc-text">7.5: &quot;স্বল্পকালে কোনো ফার্ম লোকসান নিয়েও পণ্য উৎপাদন করতে পারে&quot;-ব্যাখ্যা কর।</span></a>
+<a href="#q-42" class="toc-item needs-diagram" data-target="q-42" data-chapter="7"><span class="toc-text">7.3: পূর্ণপ্রতিযোগিতায় ফার্মের স্বল্পকালীন ভারসাম্য বর্ণনা কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-43" class="toc-item needs-diagram" data-target="q-43" data-chapter="7"><span class="toc-text">7.5: &quot;স্বল্পকালে কোনো ফার্ম লোকসান নিয়েও পণ্য উৎপাদন করতে পারে&quot;-ব্যাখ্যা কর।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-44" class="toc-item" data-target="q-44" data-chapter="7"><span class="toc-text">7.8: পূর্ণপ্রতিযোগিতামূলক বাজার ও একচেটিয়া বাজারের মধ্যে পার্থক্য লেখ।</span></a>
 <a href="#q-45" class="toc-item" data-target="q-45" data-chapter="7"><span class="toc-text">7.9: &quot;মুনাফা ঝুঁকি বহনের পুরস্কার&quot; ব্যাখ্যা কর।</span></a>
 <a href="#q-46" class="toc-item" data-target="q-46" data-chapter="7"><span class="toc-text">7.10: ফার্ম ও শিল্পের মধ্যে পার্থক্য কী?</span></a>
 <a href="#q-47" class="toc-item" data-target="q-47" data-chapter="7"><span class="toc-text">7.13: একচেটিয়া বাজারের অনুমিত শর্ত ও বৈশিষ্ট্য আলোচনা কর।</span></a>
-<a href="#q-48" class="toc-item" data-target="q-48" data-chapter="7"><span class="toc-text">7.14: একচেটিয়া বাজারে ফার্ম বা শিল্পের দীর্ঘকালীন ভারসাম্য ব্যাখ্যা কর।</span></a>
-<a href="#q-49" class="toc-item" data-target="q-49" data-chapter="7"><span class="toc-text">7.16: কেন গড় আয় রেখাকে একচেটিয়া ফার্মের চাহিদা রেখা বলা হয়?</span></a>
-<a href="#q-50" class="toc-item" data-target="q-50" data-chapter="7"><span class="toc-text">7.18: প্রমাণ কর, একচেটিয়া বাজারে MR = 1/2 AR হয়।</span></a>
+<a href="#q-48" class="toc-item needs-diagram" data-target="q-48" data-chapter="7"><span class="toc-text">7.14: একচেটিয়া বাজারে ফার্ম বা শিল্পের দীর্ঘকালীন ভারসাম্য ব্যাখ্যা কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-49" class="toc-item needs-diagram" data-target="q-49" data-chapter="7"><span class="toc-text">7.16: কেন গড় আয় রেখাকে একচেটিয়া ফার্মের চাহিদা রেখা বলা হয়?</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-50" class="toc-item needs-diagram" data-target="q-50" data-chapter="7"><span class="toc-text">7.18: প্রমাণ কর, একচেটিয়া বাজারে MR = 1/2 AR হয়।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-51" class="toc-item" data-target="q-51" data-chapter="7"><span class="toc-text">7.20: বৈষম্যকরণের প্রয়োজনীয় বৈশিষ্ট্য বা শর্তাবলি আলোচনা কর।</span></a>
 <a href="#q-52" class="toc-item" data-target="q-52" data-chapter="7"><span class="toc-text">7.22: অলিগোপলি বাজারের বৈশিষ্ট্যগুলো আলোচনা কর।</span></a>
 <a href="#q-53" class="toc-item" data-target="q-53" data-chapter="7"><span class="toc-text">7.25: ডুয়োপলি বাজারের বৈশিষ্ট্য কী কী?</span></a>
-<a href="#q-54" class="toc-item" data-target="q-54" data-chapter="8"><span class="toc-text">8.1: বন্টনের প্রান্তিক উৎপাদনশীলতা তত্ত্বটি সমালোচনাসহ বিশ্লেষণ কর।</span></a>
+<a href="#q-54" class="toc-item needs-diagram" data-target="q-54" data-chapter="8"><span class="toc-text">8.1: বন্টনের প্রান্তিক উৎপাদনশীলতা তত্ত্বটি সমালোচনাসহ বিশ্লেষণ কর।</span><span class="toc-badge">🖼️</span></a>
 <a href="#q-55" class="toc-item" data-target="q-55" data-chapter="8"><span class="toc-text">8.4: বিভিন্ন পেশায় মজুরি হারের পার্থক্যের কারণ লেখ।</span></a>
 <a href="#q-56" class="toc-item" data-target="q-56" data-chapter="8"><span class="toc-text">8.6: শ্রমিক সংঘের কার্যাবলি আলোচনা কর।</span></a>
 <a href="#q-57" class="toc-item" data-target="q-57" data-chapter="8"><span class="toc-text">8.8: নারী ও পুরুষের মজুরির হারের পার্থক্যের কারণসমূহ বর্ণনা কর।</span></a>
@@ -1156,12 +1252,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-10" data-chapter="2">
+      <details class="qcard needs-diagram" id="q-10" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>চাহিদা সূচি হলো এমন একটি টেবিল, যেখানে একটি পণ্যের বিভিন্ন দামের বিপরীতে ভোক্তা কী পরিমাণ পণ্য কিনতে ইচ্ছুক তা দেখানো হয়। এই সূচির তথ্য গ্রাফের মাধ্যমে উপস্থাপন করলে যে রেখা পাওয়া যায়, তাকে চাহিদা রেখা বলে। নিচে একটি কাল্পনিক উদাহরণের মাধ্যমে বিষয়টি দেখানো হলো।</p>
@@ -1187,12 +1284,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-11" data-chapter="2">
+      <details class="qcard needs-diagram" id="q-11" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>চাহিদা রেখা সাধারণত বাম থেকে ডানে নিচের দিকে নেমে যায়, অর্থাৎ দাম বাড়লে চাহিদাকৃত পরিমাণ কমে এবং দাম কমলে চাহিদাকৃত পরিমাণ বাড়ে। এই নিম্নগামী প্রবণতার পেছনে কিছু নির্দিষ্ট অর্থনৈতিক কারণ রয়েছে, যা বোঝা ভোক্তার ক্রয় আচরণ বিশ্লেষণে গুরুত্বপূর্ণ।</p>
@@ -1214,12 +1312,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-12" data-chapter="2">
+      <details class="qcard needs-diagram" id="q-12" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি পণ্যের বাজারে দাম ও উৎপাদকের বিক্রয়ের ইচ্ছার মধ্যে একটি স্বাভাবিক সম্পর্ক রয়েছে। এই সম্পর্কটি ব্যাখ্যা করার জন্যই জোগান বিধির ধারণা ব্যবহার করা হয়, যা বাজারে দাম নির্ধারণে গুরুত্বপূর্ণ ভূমিকা রাখে।</p>
@@ -1254,12 +1353,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-13" data-chapter="2">
+      <details class="qcard needs-diagram" id="q-13" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি স্বাধীন বাজারে দাম নির্ধারণে চাহিদা ও জোগান উভয়েরই গুরুত্বপূর্ণ ভূমিকা রয়েছে। এই দুইয়ের মিথস্ক্রিয়ার মাধ্যমেই একটি নির্দিষ্ট দাম ও পরিমাণে বাজার স্থিতিশীল অবস্থায় পৌঁছায়, যাকে বাজার ভারসাম্য বলা হয়। এই প্রক্রিয়া বোঝা বাজার ব্যবস্থার কার্যপ্রণালী বিশ্লেষণে অত্যন্ত গুরুত্বপূর্ণ।</p>
@@ -1537,12 +1637,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-21" data-chapter="4">
+      <details class="qcard needs-diagram" id="q-21" data-chapter="4">
         <summary class="qsummary">
           <span class="qtext">4.8: সরলরৈখিক চাহিদা রেখার কোনো নির্দিষ্ট বিন্দুতে দাম স্থিতিস্থাপকতা নির্ণয় কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি সরলরৈখিক (straight line) চাহিদা রেখার প্রতিটি বিন্দুতে দাম স্থিতিস্থাপকতার মান আলাদা আলাদা হয়, যদিও রেখাটি একটি সরলরেখা। জ্যামিতিক পদ্ধতি ব্যবহার করে এই রেখার যেকোনো নির্দিষ্ট বিন্দুতে স্থিতিস্থাপকতা সহজেই নির্ণয় করা যায়, যা ভোক্তা আচরণ ও মূল্যনীতি বিশ্লেষণে গুরুত্বপূর্ণ।</p>
@@ -1659,12 +1760,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-25" data-chapter="5">
+      <details class="qcard needs-diagram" id="q-25" data-chapter="5">
         <summary class="qsummary">
           <span class="qtext">5.6: নিরপেক্ষ রেখার বৈশিষ্ট্যসমূহ লেখ।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একজন ভোক্তা দুটি পণ্যের বিভিন্ন সংমিশ্রণ থেকে সমান পরিমাণ সন্তুষ্টি পেতে পারেন, আর এই সমান সন্তুষ্টিদানকারী সংমিশ্রণগুলোর বিন্দু জোড়া দিয়ে যে রেখা পাওয়া যায়, তাকে নিরপেক্ষ রেখা বলা হয়। এই রেখার কিছু নির্দিষ্ট বৈশিষ্ট্য রয়েছে, যা ভোক্তার আচরণ বিশ্লেষণে গুরুত্বপূর্ণ ভূমিকা রাখে।</p>
@@ -1687,12 +1789,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-26" data-chapter="5">
+      <details class="qcard needs-diagram" id="q-26" data-chapter="5">
         <summary class="qsummary">
           <span class="qtext">5.7: নিরপেক্ষ রেখা ও চাহিদা রেখার মধ্যে পার্থক্য লেখ।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>ভোক্তা আচরণ বিশ্লেষণে অর্থনীতিতে দুই ধরনের গুরুত্বপূর্ণ রেখা ব্যবহার করা হয়—নিরপেক্ষ রেখা ও চাহিদা রেখা। দেখতে দুটোই বক্ররেখা হলেও এদের ধারণা, উদ্দেশ্য ও ব্যবহারের মধ্যে উল্লেখযোগ্য পার্থক্য রয়েছে।</p>
@@ -1729,12 +1832,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-27" data-chapter="5">
+      <details class="qcard needs-diagram" id="q-27" data-chapter="5">
         <summary class="qsummary">
           <span class="qtext">5.8: বাজেট রেখা কী?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একজন ভোক্তার আয় সবসময় সীমিত থাকে, তাই তিনি চাইলেই যেকোনো পরিমাণ পণ্য কিনতে পারেন না। তার সীমিত আয় দিয়ে কোন কোন সংমিশ্রণ কেনা সম্ভব, তা দেখানোর জন্যই বাজেট রেখার ধারণা ব্যবহার করা হয়, যা ভোক্তার ক্রয় সিদ্ধান্ত বিশ্লেষণে গুরুত্বপূর্ণ।</p>
@@ -1750,12 +1854,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-28" data-chapter="5">
+      <details class="qcard needs-diagram" id="q-28" data-chapter="5">
         <summary class="qsummary">
           <span class="qtext">5.10: নিরপেক্ষ রেখা ও বাজেট রেখার মধ্যে পার্থক্য লেখ।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>ভোক্তার সর্বোচ্চ সন্তুষ্টির বিন্দু নির্ণয়ে অর্থনীতিতে দুটি গুরুত্বপূর্ণ রেখা ব্যবহার করা হয়—নিরপেক্ষ রেখা ও বাজেট রেখা। দুটোই দুই পণ্যের সংমিশ্রণ নিয়ে কাজ করলেও এদের ভিত্তি, আকৃতি ও উদ্দেশ্যের মধ্যে উল্লেখযোগ্য পার্থক্য রয়েছে।</p>
@@ -1792,12 +1897,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-29" data-chapter="5">
+      <details class="qcard needs-diagram" id="q-29" data-chapter="5">
         <summary class="qsummary">
           <span class="qtext">5.14: প্রমাণ কর যে, দাম প্রভাব = আয় প্রভাব + পরিবর্তক প্রভাব।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>কোনো পণ্যের দাম পরিবর্তিত হলে ভোক্তার ক্রয়ের পরিমাণে যে মোট পরিবর্তন ঘটে, তাকে দাম প্রভাব বলা হয়। এই দাম প্রভাবকে দুটি উপাদানে ভাগ করা যায়—আয় প্রভাব ও পরিবর্তক (প্রতিস্থাপন) প্রভাব। নিরপেক্ষ রেখা বিশ্লেষণের মাধ্যমে এই সম্পর্কটি প্রমাণ করা যায়।</p>
@@ -1862,12 +1968,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-31" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-31" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.3: সম-উৎপাদন রেখা ও নিরপেক্ষ রেখার মধ্যে পার্থক্য লেখ।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>উৎপাদন তত্ত্ব ও ভোক্তা তত্ত্বে দুটি ধারণাগতভাবে সাদৃশ্যপূর্ণ রেখা ব্যবহার করা হয়—সম-উৎপাদন রেখা ও নিরপেক্ষ রেখা। দুটোই আকৃতিতে প্রায় একই রকম হলেও এদের বিশ্লেষণের ক্ষেত্র ও ভিত্তির মধ্যে উল্লেখযোগ্য পার্থক্য রয়েছে।</p>
@@ -1926,12 +2033,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-33" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-33" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.8: ক্রমহ্রাসমান প্রান্তিক উৎপাদন বিধি সমালোচনাসহ আলোচনা কর। এ বিধি কি শুধু কৃষি ক্ষেত্রে প্রযোজ্য?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি প্রতিষ্ঠান যখন একটি স্থির উপকরণের সাথে একটি পরিবর্তনশীল উপকরণের পরিমাণ ক্রমান্বয়ে বাড়াতে থাকে, তখন একসময় থেকে প্রতিটি বাড়তি এককের অতিরিক্ত উৎপাদন কমতে শুরু করে। এই স্বাভাবিক প্রবণতাকেই ক্রমহ্রাসমান প্রান্তিক উৎপাদন বিধি বলা হয়, যা উৎপাদন তত্ত্বের একটি গুরুত্বপূর্ণ ধারণা।</p>
@@ -1965,12 +2073,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-34" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-34" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.9: সম-উৎপাদন রেখার বৈশিষ্ট্যসমূহ আলোচনা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি প্রতিষ্ঠান শ্রম ও মূলধনের বিভিন্ন সংমিশ্রণ ব্যবহার করে একই পরিমাণ উৎপাদন অর্জন করতে পারে, আর এই সংমিশ্রণগুলোর বিন্দু জোড়া দিয়ে যে রেখা পাওয়া যায়, তাকে সম-উৎপাদন রেখা বলা হয়। এই রেখার কিছু নির্দিষ্ট বৈশিষ্ট্য রয়েছে, যা উৎপাদন পরিকল্পনা বিশ্লেষণে গুরুত্বপূর্ণ ভূমিকা রাখে।</p>
@@ -1993,12 +2102,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-35" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-35" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.12: রিকার্ডোর খাজনা তত্ত্বটি সমালোচনাসহ ব্যাখ্যা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>জমি থেকে প্রাপ্ত আয় কীভাবে নির্ধারিত হয়, তা ব্যাখ্যা করার জন্য অর্থনীতিবিদ ডেভিড রিকার্ডো একটি গুরুত্বপূর্ণ তত্ত্ব উপস্থাপন করেন, যা রিকার্ডোর খাজনা তত্ত্ব নামে পরিচিত। এই তত্ত্ব ভূমি মালিকের আয় ও উৎপাদন খরচের মধ্যকার সম্পর্ক বোঝার ক্ষেত্রে অর্থনীতিতে গভীর প্রভাব ফেলেছে।</p>
@@ -2058,12 +2168,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-37" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-37" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.18: মোট ব্যয়, গড় ব্যয় ও প্রান্তিক ব্যয় এর মধ্যে সম্পর্ক দেখাও।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি প্রতিষ্ঠানের উৎপাদন সিদ্ধান্ত নিতে খরচের বিভিন্ন ধারণা—মোট ব্যয়, গড় ব্যয় ও প্রান্তিক ব্যয়—গুরুত্বপূর্ণ ভূমিকা রাখে। এই তিনটি ধারণার মধ্যে একটি নির্দিষ্ট গাণিতিক ও চিত্রভিত্তিক সম্পর্ক রয়েছে, যা উৎপাদন খরচ বিশ্লেষণে অপরিহার্য।</p>
@@ -2086,12 +2197,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-38" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-38" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.20: স্বল্পকালীন গড় ব্যয় রেখা কী কী কারণে &#x27;U&#x27; আকৃতির হয়?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>স্বল্প মেয়াদে একটি প্রতিষ্ঠানের গড় ব্যয় রেখা প্রথমে নিচের দিকে নামে, তারপর একটি সর্বনিম্ন বিন্দুতে পৌঁছে আবার ওপরের দিকে উঠতে শুরু করে—এই বিশেষ আকৃতিকেই &#x27;U&#x27; আকৃতি বলা হয়। এই আকৃতির পেছনে কিছু নির্দিষ্ট অর্থনৈতিক কারণ রয়েছে, যা স্বল্প মেয়াদে উৎপাদনের প্রকৃতির সাথে সম্পর্কিত।</p>
@@ -2121,12 +2233,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-39" data-chapter="6">
+      <details class="qcard needs-diagram" id="q-39" data-chapter="6">
         <summary class="qsummary">
           <span class="qtext">6.21: দীর্ঘকালীন গড় ব্যয় রেখাকে এনভেলাপ রেখা বলা হয় কেন?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>দীর্ঘ মেয়াদে একটি প্রতিষ্ঠান তার উৎপাদন ক্ষমতা পরিবর্তন করতে পারে, তাই বিভিন্ন উৎপাদন স্তরের জন্য বিভিন্ন স্বল্পকালীন গড় ব্যয় রেখা তৈরি হয়। এই সব স্বল্পকালীন রেখাগুলোর সমন্বয়ে যে রেখা গঠিত হয়, তাকে দীর্ঘকালীন গড় ব্যয় রেখা বলা হয়, যা এনভেলাপ রেখা নামেও পরিচিত।</p>
@@ -2207,12 +2320,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-42" data-chapter="7">
+      <details class="qcard needs-diagram" id="q-42" data-chapter="7">
         <summary class="qsummary">
           <span class="qtext">7.3: পূর্ণপ্রতিযোগিতায় ফার্মের স্বল্পকালীন ভারসাম্য বর্ণনা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>পূর্ণপ্রতিযোগিতামূলক বাজারে একটি ফার্ম বাজারে নির্ধারিত দামকে গ্রহণকারী হিসেবে কাজ করে, নিজে দাম নির্ধারণ করতে পারে না। স্বল্প মেয়াদে ফার্মের কিছু উপকরণ স্থির থাকে বলে ফার্ম নির্দিষ্ট শর্তে তার মুনাফা সর্বোচ্চ করার বা ক্ষতি সর্বনিম্ন করার চেষ্টা করে, আর এই অবস্থাকেই স্বল্পকালীন ভারসাম্য বলা হয়।</p>
@@ -2246,12 +2360,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-43" data-chapter="7">
+      <details class="qcard needs-diagram" id="q-43" data-chapter="7">
         <summary class="qsummary">
           <span class="qtext">7.5: &quot;স্বল্পকালে কোনো ফার্ম লোকসান নিয়েও পণ্য উৎপাদন করতে পারে&quot;-ব্যাখ্যা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>সাধারণভাবে মনে হতে পারে যে, লোকসান হলে একটি ফার্মের উৎপাদন বন্ধ করে দেওয়াই উচিত। কিন্তু বাস্তবে স্বল্প মেয়াদে একটি ফার্ম লোকসানের মধ্যেও উৎপাদন চালিয়ে যেতে পারে, এবং এর পেছনে যুক্তিসঙ্গত অর্থনৈতিক কারণ রয়েছে, যা স্থির ও পরিবর্তনশীল ব্যয়ের প্রকৃতির সাথে সম্পর্কিত।</p>
@@ -2444,12 +2559,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-48" data-chapter="7">
+      <details class="qcard needs-diagram" id="q-48" data-chapter="7">
         <summary class="qsummary">
           <span class="qtext">7.14: একচেটিয়া বাজারে ফার্ম বা শিল্পের দীর্ঘকালীন ভারসাম্য ব্যাখ্যা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একচেটিয়া বাজারে যেহেতু নতুন প্রতিযোগী প্রবেশে কঠোর বাধা থাকে, তাই এই বাজারের দীর্ঘকালীন ভারসাম্য পূর্ণপ্রতিযোগিতার থেকে সম্পূর্ণ ভিন্ন প্রকৃতির হয়। একচেটিয়া প্রতিষ্ঠান দীর্ঘ মেয়াদেও তার বাজার নিয়ন্ত্রণ ধরে রাখতে সক্ষম হয়, যা এই বাজার কাঠামোর একটি গুরুত্বপূর্ণ বৈশিষ্ট্য।</p>
@@ -2483,12 +2599,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-49" data-chapter="7">
+      <details class="qcard needs-diagram" id="q-49" data-chapter="7">
         <summary class="qsummary">
           <span class="qtext">7.16: কেন গড় আয় রেখাকে একচেটিয়া ফার্মের চাহিদা রেখা বলা হয়?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একচেটিয়া বাজারে একটি প্রতিষ্ঠানের গড় আয় রেখা ও চাহিদা রেখা—এই দুটি ধারণা প্রায়ই একই রেখা হিসেবে বিবেচিত হয়। এই দুইয়ের মধ্যকার সম্পর্ক বোঝা একচেটিয়া প্রতিষ্ঠানের মূল্য ও উৎপাদন সিদ্ধান্ত বিশ্লেষণে অত্যন্ত গুরুত্বপূর্ণ।</p>
@@ -2509,12 +2626,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-50" data-chapter="7">
+      <details class="qcard needs-diagram" id="q-50" data-chapter="7">
         <summary class="qsummary">
           <span class="qtext">7.18: প্রমাণ কর, একচেটিয়া বাজারে MR = 1/2 AR হয়।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একচেটিয়া বাজারে প্রান্তিক আয় (MR) ও গড় আয়ের (AR) মধ্যে একটি নির্দিষ্ট গাণিতিক সম্পর্ক বিদ্যমান, যা চাহিদার দাম স্থিতিস্থাপকতার (Ep) সাথে সম্পর্কিত। নির্দিষ্ট শর্তে (যখন চাহিদার স্থিতিস্থাপকতা ২ হয়) এই সম্পর্ক প্রমাণ করা যায় যে MR = ১/২ AR হয়।</p>
@@ -2652,12 +2770,13 @@
           </div>
         </div>
       </details>
-      <details class="qcard" id="q-54" data-chapter="8">
+      <details class="qcard needs-diagram" id="q-54" data-chapter="8">
         <summary class="qsummary">
           <span class="qtext">8.1: বন্টনের প্রান্তিক উৎপাদনশীলতা তত্ত্বটি সমালোচনাসহ বিশ্লেষণ কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
+          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>উৎপাদনে ব্যবহৃত শ্রম, মূলধন, জমির মতো বিভিন্ন উপকরণ কীভাবে তাদের প্রাপ্য মজুরি, সুদ বা খাজনা পায়, তা ব্যাখ্যা করার জন্য অর্থনীতিবিদরা বন্টনের প্রান্তিক উৎপাদনশীলতা তত্ত্ব উপস্থাপন করেন। এই তত্ত্ব উৎপাদন উপকরণের আয় নির্ধারণে গুরুত্বপূর্ণ ভূমিকা রাখে, যদিও এর কিছু সীমাবদ্ধতাও রয়েছে।</p>
