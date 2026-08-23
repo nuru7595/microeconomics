@@ -795,6 +795,60 @@
       flex-shrink: 0;
       opacity: 0.9;
     }
+    .diagram-box svg {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+    /* ===== DIAGRAM-ADDED MARKER STYLES (recently updated with a new diagram) ===== */
+    .qcard.diagram-added > .qsummary {
+      background: repeating-linear-gradient(45deg, #f2f8f4, #f2f8f4 10px, #e3f0e8 10px, #e3f0e8 20px);
+      border-left: 4px solid #2f6b4f;
+    }
+
+    .qcard.diagram-added > .qsummary::after {
+      content: "✅ নতুন চিত্র যোগ হয়েছে";
+      margin-left: auto;
+      margin-right: 8px;
+      background: #2f6b4f;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 20px;
+      white-space: nowrap;
+      order: 2;
+    }
+
+    .qcard.diagram-added > .qsummary .chev {
+      order: 3;
+    }
+
+    .toc-item.diagram-added {
+      border-left: 3px solid #2f6b4f;
+      background: repeating-linear-gradient(45deg, #f2f8f4, #f2f8f4 8px, #e3f0e8 8px, #e3f0e8 16px);
+    }
+
+    .toc-item.diagram-added:hover {
+      background: repeating-linear-gradient(45deg, #e3f0e8, #e3f0e8 8px, #d3e8da 8px, #d3e8da 16px);
+    }
+
+    .toc-badge-added {
+      margin-left: auto;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      opacity: 0.9;
+    }
+    /* ===== END DIAGRAM-ADDED MARKER STYLES ===== */
+    .diagram-caption {
+      text-align: center;
+      font-weight: 700;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: #5c1620;
+      margin: 4px 0 10px;
+    }
     /* ===== END DIAGRAM-PENDING MARKER STYLES ===== */
   </style>
 
@@ -809,18 +863,83 @@
     STYLING STAYS CONSISTENT ACROSS THE WHOLE FILE (do not invent a new style):
       1. Remove the needs-diagram class from that question's details tag.
       2. Delete that question's diagram-pending-banner div entirely.
-      3. Insert the actual diagram wrapped EXACTLY like this (same class names every time):
+      3. Insert the actual diagram wrapped EXACTLY like this (same class name every time).
+         Since this is a single standalone offline HTML file (no server/image hosting), use an
+         INLINE <svg>...</svg> directly, not an <img src="...">:
            <div class="diagram-box">
-             <img class="diagram-img" src="PATH_OR_DATA_URI" alt="short bengali description">
+             <svg viewBox="0 0 W H" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="short bengali description">
+               ... shapes/paths/text ...
+             </svg>
            </div>
-         Place it inside the most relevant sub-section (usually right after the paragraph that
-         describes the curve/graph in words), not floating outside all sections.
-      4. Do not change fonts, colors, or add inline styles to the image - diagram-box and
-         diagram-img already match the maroon (#7a1f2b) / gold (#c8973a) theme of the file.
-      5. For "পার্থক্য" (difference) questions comparing two curves, use two diagram-box divs,
+         Use these exact hex colors so every diagram matches the page theme:
+           maroon #7a1f2b (main curve/demand), maroon-dark #5c1620 (titles/point outlines),
+           gold #c8973a (data points/supporting curve), green #2f6b4f (supply curve/notes),
+           ink #2a2320 (axes/axis text), ink-soft #5a5049 (dashed guide lines/tick labels).
+         Use font-family "'Noto Serif Bengali','Noto Sans Bengali',serif" for titles/curve
+         labels and "'Noto Sans Bengali',sans-serif" for axis/tick text, matching the rest
+         of the page's Bengali fonts.
+      4. For "পার্থক্য" (difference) questions comparing two curves, use two diagram-box divs,
          one inside each of the two relevant sub-sections, instead of squeezing both curves
          into a single image.
-      6. Also update that question's entry in the Table of Contents (toc-grid): remove the
+      5. Then mark the question as RECENTLY UPDATED so the reader can tell it just changed:
+         - On the <details> tag, add a second class: diagram-added
+             e.g. <details class="qcard diagram-added" id="q-10" data-chapter="2">
+         - On its TOC <a>, add class diagram-added and a badge span at the end:
+             <a href="#q-10" class="toc-item diagram-added" data-target="q-10" data-chapter="2">
+               <span class="toc-text">...</span><span class="toc-badge-added">✅</span>
+             </a>
+         This shows a green "✅ নতুন চিত্র যোগ হয়েছে" badge (distinct from the orange
+         "🖼️ চিত্র বাকি" pending badge) so it's obvious at a glance which questions were
+         just completed in this pass. Every batch of newly-added diagrams should get this
+         green marker — don't reuse/remove a previous batch's diagram-added marks unless the
+         user explicitly asks to clear them (e.g. "purano mark gula shoriye dao").
+      6. MANDATORY textbook answer pattern — a diagram is never left to speak for itself.
+         Based on the user's own reference textbook pages, every diagram block MUST follow
+         this exact structure, in this exact order, inside the SAME sub-section (this is the
+         actual house style — do not shorten or skip any piece of it):
+         (i)   A section title BEFORE the diagram starts, styled like the other section
+               labels (ভূমিকা/উপসংহার use the same .sec-label class):
+                 <div class="sec-label">🖼️ চিত্র</div>
+               placed immediately before the <div class="diagram-box">.
+         (ii)  The diagram itself: <div class="diagram-box"><svg>...</svg></div>
+               Inside the SVG, every axis title text MUST literally say which axis it is
+               using "X-অক্ষ:" / "Y-অক্ষ:" prefixes (matching the OX/OY convention used in
+               the explanation text), e.g.:
+                 Y-axis (price) label — place safely to the RIGHT of the y-axis line, near
+                 the top, NOT to its left: x="80" y="48" (assuming the y-axis vertical line
+                 sits at x="70"), text: "Y-অক্ষ: দাম (P)"
+                 X-axis (quantity) label — use text-anchor="end" and x = (viewBox width - 10)
+                 so the text is guaranteed to render fully inside the viewBox instead of
+                 overflowing past the right edge, e.g. for a 480-wide viewBox:
+                 x="470" y="<same baseline as before>" text-anchor="end", text:
+                 "X-অক্ষ: পরিমাণ (Q)"
+               This fixes a real bug that happened before: with text-anchor default (start)
+               and x too close to the viewBox's right edge, the Bengali axis label text got
+               clipped/cut off. Never place a start-anchored label so close to an edge that
+               a normal-length Bengali label could run past the viewBox boundary — either
+               anchor="end" near that edge, or leave enough margin.
+         (iii) A short bold-italic caption naming the figure, right after the diagram-box:
+                 <p class="diagram-caption">চিত্র: চাহিদা রেখা</p>
+               (swap in the right name — চাহিদা রেখা / জোগান রেখা / বাজার ভারসাম্য / চাহিদার
+               সংকোচন-সম্প্রসারণ / etc — matching what the diagram actually shows).
+         (iv)  A second section title BEFORE the explanation paragraph starts:
+                 <div class="sec-label">📝 ব্যাখ্যা</div>
+         (v)   Then the explanatory paragraph itself, written like this:
+           a. Label every plotted point on the SVG itself with a lowercase Bengali/Latin
+              letter (a, b, c, d, e, ...) next to the point — not just the bare circle.
+           b. In the paragraph, explicitly say which axis is which
+              (e.g. "চিত্রে অনুভূমিক/OX অক্ষে পরিমাণ (Q) এবং উল্লম্ব/OY অক্ষে দাম (P)
+              নির্দেশ করে"), then walk through each labelled point one by one stating its
+              price and corresponding quantity ("দাম যখন ... তখন পরিমাণ ..., যা a বিন্দু
+              দ্বারা নির্দেশিত। দাম ... হলে পরিমাণ ... হয়, যা b বিন্দু দ্বারা নির্দেশিত।" etc.)
+           c. Close the paragraph by naming the curve from the joined points
+              ("a, b, c ... বিন্দুগুলো যোগ করলে যে রেখা পাওয়া যায় তাকে D/S/DD রেখা বলে")
+              and, where relevant, one line on the slope/relationship it shows (নিম্নগামী/
+              ঋণাত্মক ঢাল → দাম-চাহিদার বিপরীত সম্পর্ক; ঊর্ধ্বগামী/ধনাত্মক ঢাল → দাম-জোগানের
+              সমমুখী সম্পর্ক; ছেদবিন্দু E → ভারসাম্য দাম Pₑ ও পরিমাণ Qₑ, ইত্যাদি).
+         Every one of (i)–(v) is REQUIRED for every diagram added from now on, in every
+         chapter — not optional polish. Do not merge or drop any of the five pieces.
+      7. Also update that question's entry in the Table of Contents (toc-grid): remove the
          needs-diagram class from its <a class="toc-item needs-diagram" ...> tag, and remove
          the <span class="toc-badge">🖼️</span> inside it, so the TOC badge disappears too.
   ================================================================================= -->
@@ -876,10 +995,11 @@
 <a href="#q-7" class="toc-item" data-target="q-7" data-chapter="1"><span class="toc-text">1.17: পুঁজিবাদ কী? পুঁজিবাদের বিকাশ সম্পর্কে কার্ল মার্কসের বিশ্লেষণ ব্যাখ্যা কর।</span></a>
 <a href="#q-8" class="toc-item" data-target="q-8" data-chapter="1"><span class="toc-text">1.19: অর্থনৈতিক চিন্তাধারার বিকাশে কেইনসের অবদান আলোচনা কর।</span></a>
 <a href="#q-9" class="toc-item" data-target="q-9" data-chapter="2"><span class="toc-text">2.2: চাহিদা বিধির সীমাবদ্ধতা ব্যাখ্যা কর।</span></a>
-<a href="#q-10" class="toc-item needs-diagram" data-target="q-10" data-chapter="2"><span class="toc-text">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span><span class="toc-badge">🖼️</span></a>
-<a href="#q-11" class="toc-item needs-diagram" data-target="q-11" data-chapter="2"><span class="toc-text">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span><span class="toc-badge">🖼️</span></a>
-<a href="#q-12" class="toc-item needs-diagram" data-target="q-12" data-chapter="2"><span class="toc-text">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span><span class="toc-badge">🖼️</span></a>
-<a href="#q-13" class="toc-item needs-diagram" data-target="q-13" data-chapter="2"><span class="toc-text">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span><span class="toc-badge">🖼️</span></a>
+<a href="#q-10" class="toc-item diagram-added" data-target="q-10" data-chapter="2"><span class="toc-text">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span><span class="toc-badge-added">✅</span></a>
+<a href="#q-63" class="toc-item diagram-added" data-target="q-63" data-chapter="2"><span class="toc-text">2.4: চাহিদা অপেক্ষক Q = 12/P থেকে চাহিদা রেখা অঙ্কন কর।</span><span class="toc-badge-added">✅</span></a>
+<a href="#q-11" class="toc-item diagram-added" data-target="q-11" data-chapter="2"><span class="toc-text">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span><span class="toc-badge-added">✅</span></a>
+<a href="#q-12" class="toc-item diagram-added" data-target="q-12" data-chapter="2"><span class="toc-text">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span><span class="toc-badge-added">✅</span></a>
+<a href="#q-13" class="toc-item diagram-added" data-target="q-13" data-chapter="2"><span class="toc-text">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span><span class="toc-badge-added">✅</span></a>
 <a href="#q-14" class="toc-item" data-target="q-14" data-chapter="3"><span class="toc-text">3.3: রপ্তানি কোটার প্রভাব আলোচনা কর।</span></a>
 <a href="#q-15" class="toc-item" data-target="q-15" data-chapter="3"><span class="toc-text">3.5: এডাম স্মিথ কর্তৃক প্রদত্ত করের চারটি কানুন বা নীতিমালা আলোচনা কর।</span></a>
 <a href="#q-16" class="toc-item" data-target="q-16" data-chapter="3"><span class="toc-text">3.6: উত্তম কর ব্যবস্থার বৈশিষ্ট্যসমূহ ব্যাখ্যা কর।</span></a>
@@ -1250,13 +1370,12 @@
           </div>
         </div>
       </details>
-      <details class="qcard needs-diagram" id="q-10" data-chapter="2">
+      <details class="qcard diagram-added" id="q-10" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.3: একটি কাল্পনিক চাহিদা সূচি থেকে চাহিদা রেখা অঙ্কন কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
-          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>চাহিদা সূচি হলো এমন একটি টেবিল, যেখানে একটি পণ্যের বিভিন্ন দামের বিপরীতে ভোক্তা কী পরিমাণ পণ্য কিনতে ইচ্ছুক তা দেখানো হয়। এই সূচির তথ্য গ্রাফের মাধ্যমে উপস্থাপন করলে যে রেখা পাওয়া যায়, তাকে চাহিদা রেখা বলে। নিচে একটি কাল্পনিক উদাহরণের মাধ্যমে বিষয়টি দেখানো হলো।</p>
@@ -1275,6 +1394,58 @@
                 </tbody>
               </table>
             </div>
+            <div class="sec-label">🖼️ চিত্র</div>
+            <div class="diagram-box">
+              <svg viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="কাল্পনিক চাহিদা সূচি থেকে অঙ্কিত চাহিদা রেখা">
+                <text x="240" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali','Noto Sans Bengali',serif">চাহিদা রেখা (Demand Curve)</text>
+                <line x1="70" y1="300" x2="450" y2="300" stroke="#2a2320" stroke-width="2"/>
+                <line x1="70" y1="300" x2="70" y2="40" stroke="#2a2320" stroke-width="2"/>
+                <polygon points="450,300 440,295 440,305" fill="#2a2320"/>
+                <polygon points="70,40 65,50 75,50" fill="#2a2320"/>
+                <text x="470" y="304" text-anchor="end" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">X-অক্ষ: পরিমাণ (Q)</text>
+                <text x="80" y="48" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Y-অক্ষ: দাম (P)</text>
+                <g stroke="#e8ddc9" stroke-width="1">
+                  <line x1="131.7" y1="300" x2="131.7" y2="40"/>
+                  <line x1="193.3" y1="300" x2="193.3" y2="40"/>
+                  <line x1="255" y1="300" x2="255" y2="40"/>
+                  <line x1="316.7" y1="300" x2="316.7" y2="40"/>
+                  <line x1="378.3" y1="300" x2="378.3" y2="40"/>
+                </g>
+                <g font-size="11" fill="#5a5049" font-family="'Noto Sans Bengali',sans-serif" text-anchor="middle">
+                  <text x="131.7" y="316">১০</text>
+                  <text x="193.3" y="316">২০</text>
+                  <text x="255" y="316">৩০</text>
+                  <text x="316.7" y="316">৪০</text>
+                  <text x="378.3" y="316">৫০</text>
+                </g>
+                <g font-size="11" fill="#5a5049" font-family="'Noto Sans Bengali',sans-serif" text-anchor="end">
+                  <text x="62" y="259">১০</text>
+                  <text x="62" y="214">২০</text>
+                  <text x="62" y="169">৩০</text>
+                  <text x="62" y="124">৪০</text>
+                  <text x="62" y="79">৫০</text>
+                </g>
+                <polyline points="378.3,255 316.7,210 255,165 193.3,120 131.7,75" fill="none" stroke="#7a1f2b" stroke-width="3"/>
+                <g fill="#c8973a" stroke="#5c1620" stroke-width="1">
+                  <circle cx="378.3" cy="255" r="4"/>
+                  <circle cx="316.7" cy="210" r="4"/>
+                  <circle cx="255" cy="165" r="4"/>
+                  <circle cx="193.3" cy="120" r="4"/>
+                  <circle cx="131.7" cy="75" r="4"/>
+                </g>
+                <g font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">
+                  <text x="385" y="253">a</text>
+                  <text x="323" y="208">b</text>
+                  <text x="262" y="163">c</text>
+                  <text x="200" y="118">d</text>
+                  <text x="115" y="73">e</text>
+                </g>
+                <text x="145" y="63" font-size="13" font-weight="700" fill="#7a1f2b" font-family="'Noto Serif Bengali',serif">D</text>
+              </svg>
+            </div>
+            <p class="diagram-caption">চিত্র: চাহিদা রেখা</p>
+            <div class="sec-label">📝 ব্যাখ্যা</div>
+            <p>চিত্রে অনুভূমিক অক্ষে (OX) চাহিদার পরিমাণ (Q) এবং উল্লম্ব অক্ষে (OY) দাম (P) নির্দেশ করে। দাম যখন ১০ টাকা তখন চাহিদার পরিমাণ ৫০ একক, যা a বিন্দু দ্বারা নির্দেশিত। দাম ২০ টাকা হলে চাহিদার পরিমাণ হয় ৪০ একক, যা b বিন্দু দ্বারা নির্দেশিত। অনুরূপভাবে দাম ৩০, ৪০ ও ৫০ টাকা হলে চাহিদার পরিমাণ হয় যথাক্রমে ৩০, ২০ ও ১০ একক, যা c, d ও e বিন্দু দ্বারা দেখানো হয়েছে। a, b, c, d ও e বিন্দুসমূহ যোগ করলে যে রেখাটি পাওয়া যায় তাকে D রেখা বা চাহিদা রেখা বলে। রেখাটি বাম থেকে ডান দিকে নিম্নগামী, যা দাম ও চাহিদার মধ্যেকার বিপরীতমুখী সম্পর্ক নির্দেশ করে।</p>
           </div>
           <div class="conclusion-box">
             <div class="sec-label">উপসংহার</div>
@@ -1282,13 +1453,107 @@
           </div>
         </div>
       </details>
-      <details class="qcard needs-diagram" id="q-11" data-chapter="2">
+      <details class="qcard diagram-added" id="q-63" data-chapter="2">
+        <summary class="qsummary">
+          <span class="qtext">2.4: চাহিদা অপেক্ষক Q = 12/P থেকে চাহিদা রেখা অঙ্কন কর।</span>
+          <span class="chev">▼</span>
+        </summary>
+        <div class="qbody">
+          <div class="intro-box">
+            <div class="sec-label">ভূমিকা</div>
+            <p>চাহিদা সূচির পাশাপাশি একটি গাণিতিক সমীকরণের মাধ্যমেও দাম ও চাহিদাকৃত পরিমাণের সম্পর্ক প্রকাশ করা যায়, যাকে চাহিদা অপেক্ষক বলা হয়। Q = 12/P একটি বিশেষ ধরনের চাহিদা অপেক্ষক, যেখানে দাম ও পরিমাণের গুণফল সবসময় ধ্রুবক থাকে। এই অপেক্ষক থেকে বিভিন্ন দামে চাহিদাকৃত পরিমাণ নির্ণয় করে চাহিদা রেখা অঙ্কন করা যায়।</p>
+          </div>
+          <div class="sub-section">
+            <h3 class="sub-title">সংজ্ঞা</h3>
+            <p>চাহিদা অপেক্ষক হলো এমন একটি গাণিতিক সমীকরণ, যা একটি পণ্যের দাম (P) ও চাহিদাকৃত পরিমাণের (Q) মধ্যকার সম্পর্ককে প্রকাশ করে। এখানে Q = 12/P অপেক্ষকটিতে দাম বাড়লে চাহিদাকৃত পরিমাণ সমানুপাতিক হারে কমে, এবং P ও Q-এর গুণফল সর্বদা ১২-এর সমান থাকে (P × Q = ১২), যা একক স্থিতিস্থাপক (unitary elastic) চাহিদা রেখার বৈশিষ্ট্য নির্দেশ করে।</p>
+          </div>
+          <div class="cheat-wrap compare-wrap">
+            <div class="sec-label">📊 চাহিদা অপেক্ষক Q = 12/P থেকে প্রাপ্ত মান</div>
+            <div class="table-scroll">
+              <table class="cheat-table">
+                <thead><tr><th>দাম P (টাকা)</th><th>চাহিদাকৃত পরিমাণ Q = 12/P (একক)</th></tr></thead>
+                <tbody>
+<tr><td>১</td><td>১২</td></tr>
+<tr><td>২</td><td>৬</td></tr>
+<tr><td>৩</td><td>৪</td></tr>
+<tr><td>৪</td><td>৩</td></tr>
+<tr><td>৬</td><td>২</td></tr>
+<tr><td>১২</td><td>১</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="sec-label">🖼️ চিত্র</div>
+            <div class="diagram-box">
+              <svg viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="চাহিদা অপেক্ষক Q সমান বারো ভাগ P থেকে অঙ্কিত চাহিদা রেখা - একটি আয়তাকার হাইপারবোলা">
+                <text x="240" y="24" text-anchor="middle" font-size="15" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali','Noto Sans Bengali',serif">চাহিদা রেখা: Q = 12/P</text>
+                <line x1="70" y1="300" x2="450" y2="300" stroke="#2a2320" stroke-width="2"/>
+                <line x1="70" y1="300" x2="70" y2="40" stroke="#2a2320" stroke-width="2"/>
+                <polygon points="450,300 440,295 440,305" fill="#2a2320"/>
+                <polygon points="70,40 65,50 75,50" fill="#2a2320"/>
+                <text x="470" y="304" text-anchor="end" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">X-অক্ষ: পরিমাণ (Q)</text>
+                <text x="80" y="48" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Y-অক্ষ: দাম (P)</text>
+                <g stroke="#e8ddc9" stroke-width="1">
+                  <line x1="122.9" y1="300" x2="122.9" y2="40"/>
+                  <line x1="175.7" y1="300" x2="175.7" y2="40"/>
+                  <line x1="228.6" y1="300" x2="228.6" y2="40"/>
+                  <line x1="281.4" y1="300" x2="281.4" y2="40"/>
+                  <line x1="334.3" y1="300" x2="334.3" y2="40"/>
+                  <line x1="387.1" y1="300" x2="387.1" y2="40"/>
+                </g>
+                <g font-size="11" fill="#5a5049" font-family="'Noto Sans Bengali',sans-serif" text-anchor="middle">
+                  <text x="122.9" y="316">২</text>
+                  <text x="175.7" y="316">৪</text>
+                  <text x="228.6" y="316">৬</text>
+                  <text x="281.4" y="316">৮</text>
+                  <text x="334.3" y="316">১০</text>
+                  <text x="387.1" y="316">১২</text>
+                </g>
+                <g font-size="11" fill="#5a5049" font-family="'Noto Sans Bengali',sans-serif" text-anchor="end">
+                  <text x="62" y="266.9">২</text>
+                  <text x="62" y="229.7">৪</text>
+                  <text x="62" y="192.6">৬</text>
+                  <text x="62" y="155.4">৮</text>
+                  <text x="62" y="118.3">১০</text>
+                  <text x="62" y="81.1">১২</text>
+                </g>
+                <polyline points="387.1,281.4 334.3,277.7 281.4,272.1 228.6,262.9 175.7,244.3 149.3,225.7 122.9,188.6 109.6,151.4 101.7,114.3 96.4,77.1" fill="none" stroke="#7a1f2b" stroke-width="3"/>
+                <g fill="#c8973a" stroke="#5c1620" stroke-width="1">
+                  <circle cx="387.1" cy="281.4" r="4"/>
+                  <circle cx="228.6" cy="262.9" r="4"/>
+                  <circle cx="175.7" cy="244.3" r="4"/>
+                  <circle cx="149.3" cy="225.7" r="4"/>
+                  <circle cx="122.9" cy="188.6" r="4"/>
+                  <circle cx="96.4" cy="77.1" r="4"/>
+                </g>
+                <g font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">
+                  <text x="393" y="279">a</text>
+                  <text x="235" y="260">b</text>
+                  <text x="182" y="242">c</text>
+                  <text x="156" y="223">d</text>
+                  <text x="129" y="186">e</text>
+                  <text x="80" y="75">f</text>
+                </g>
+                <text x="105" y="68" font-size="13" font-weight="700" fill="#7a1f2b" font-family="'Noto Serif Bengali',serif">D</text>
+                <text x="240" y="326" text-anchor="middle" font-size="12" fill="#2f6b4f" font-family="'Noto Sans Bengali',sans-serif">রেখাটি একটি আয়তাকার হাইপারবোলা, কারণ প্রতিটি বিন্দুতে P × Q = ১২ (ধ্রুবক)</text>
+              </svg>
+            </div>
+            <p class="diagram-caption">চিত্র: চাহিদা রেখা</p>
+            <div class="sec-label">📝 ব্যাখ্যা</div>
+            <p>চিত্রে অনুভূমিক অক্ষে চাহিদার পরিমাণ (Q) এবং উল্লম্ব অক্ষে দাম (P) নির্দেশ করে। দাম যখন ১ টাকা তখন চাহিদার পরিমাণ ১২ একক, যা a বিন্দু দ্বারা নির্দেশিত। দাম ২ টাকা হলে চাহিদার পরিমাণ হয় ৬ একক, যা b বিন্দু দ্বারা নির্দেশিত। অনুরূপভাবে দাম ৩, ৪, ৬ ও ১২ টাকা হলে চাহিদার পরিমাণ হয় যথাক্রমে ৪, ৩, ২ ও ১ একক, যা c, d, e ও f বিন্দু দ্বারা দেখানো হয়েছে। a, b, c, d, e ও f বিন্দুসমূহ যোগ করলে যে রেখাটি পাওয়া যায় তাকে D রেখা বা চাহিদা রেখা বলে। যেহেতু প্রতিটি বিন্দুতে দাম ও পরিমাণের গুণফল ধ্রুবক (= ১২) থাকে, তাই রেখাটি একটি আয়তাকার হাইপারবোলা আকৃতির হয়।</p>
+          </div>
+          <div class="conclusion-box">
+            <div class="sec-label">উপসংহার</div>
+            <p>সংক্ষেপে বলা যায়, Q = 12/P অপেক্ষক থেকে প্রাপ্ত মানগুলো লেখচিত্রে বসালে যে রেখা পাওয়া যায় তা একটি আয়তাকার হাইপারবোলা আকৃতির চাহিদা রেখা, যেখানে প্রতিটি বিন্দুতে দাম ও পরিমাণের গুণফল অপরিবর্তিত থাকে। এই ধরনের রেখা একক স্থিতিস্থাপক চাহিদার একটি সাধারণ উদাহরণ।</p>
+          </div>
+        </div>
+      </details>
+
+      <details class="qcard diagram-added" id="q-11" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.7: চাহিদা রেখা ডান দিকে নিম্নগামী হয় কেন?</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
-          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>চাহিদা রেখা সাধারণত বাম থেকে ডানে নিচের দিকে নেমে যায়, অর্থাৎ দাম বাড়লে চাহিদাকৃত পরিমাণ কমে এবং দাম কমলে চাহিদাকৃত পরিমাণ বাড়ে। এই নিম্নগামী প্রবণতার পেছনে কিছু নির্দিষ্ট অর্থনৈতিক কারণ রয়েছে, যা বোঝা ভোক্তার ক্রয় আচরণ বিশ্লেষণে গুরুত্বপূর্ণ।</p>
@@ -1303,6 +1568,36 @@
 <li class="point"><b>৫. পণ্যের বিভিন্ন ব্যবহার</b> অনেক পণ্যের একাধিক ব্যবহার থাকে, এবং দাম কমলে ভোক্তা সেই পণ্য নতুন নতুন ক্ষেত্রে ব্যবহার করতে শুরু করে। যেমন, বিদ্যুতের দাম কমলে মানুষ শুধু আলোর জন্য নয়, রান্না বা গরম করার কাজেও তা বেশি ব্যবহার করতে পারে।</li>
 <li class="point"><b>৬. পুরাতন ও নতুন ভোক্তার সম্মিলিত চাহিদা বৃদ্ধি</b> দাম কমার সাথে সাথে পুরাতন ভোক্তারা বেশি পরিমাণে কেনেন, আবার নতুন ভোক্তারাও বাজারে যুক্ত হন—এই দুইয়ের মিলিত প্রভাবে মোট চাহিদা উল্লেখযোগ্যভাবে বৃদ্ধি পায়, যা রেখাকে নিম্নগামী করে তোলে।</li>
 </ol>
+            <div class="sec-label">🖼️ চিত্র</div>
+            <div class="diagram-box">
+              <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="চাহিদা রেখা ডান দিকে নিম্নগামী হওয়ার চিত্র">
+                <text x="240" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali','Noto Sans Bengali',serif">চাহিদা রেখার নিম্নগামী ঢাল</text>
+                <line x1="70" y1="280" x2="440" y2="280" stroke="#2a2320" stroke-width="2"/>
+                <line x1="70" y1="280" x2="70" y2="40" stroke="#2a2320" stroke-width="2"/>
+                <polygon points="440,280 430,275 430,285" fill="#2a2320"/>
+                <polygon points="70,40 65,50 75,50" fill="#2a2320"/>
+                <text x="470" y="284" text-anchor="end" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">X-অক্ষ: পরিমাণ (Q)</text>
+                <text x="80" y="48" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Y-অক্ষ: দাম (P)</text>
+                <path d="M 110 70 Q 260 175 400 250" fill="none" stroke="#7a1f2b" stroke-width="3"/>
+                <text x="403" y="245" font-size="14" font-weight="700" fill="#7a1f2b" font-family="'Noto Serif Bengali',serif">D</text>
+                <circle cx="180" cy="120" r="4" fill="#c8973a" stroke="#5c1620"/>
+                <line x1="180" y1="120" x2="180" y2="280" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="70" y1="120" x2="180" y2="120" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="55" y="124" text-anchor="end" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">P₁</text>
+                <text x="180" y="296" text-anchor="middle" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Q₁</text>
+                <text x="188" y="115" font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">a</text>
+                <circle cx="330" cy="220" r="4" fill="#c8973a" stroke="#5c1620"/>
+                <line x1="330" y1="220" x2="330" y2="280" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="70" y1="220" x2="330" y2="220" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="55" y="224" text-anchor="end" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">P₂</text>
+                <text x="330" y="296" text-anchor="middle" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Q₂</text>
+                <text x="338" y="215" font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">b</text>
+                <text x="240" y="312" text-anchor="middle" font-size="12" fill="#2f6b4f" font-family="'Noto Sans Bengali',sans-serif">দাম P₁ থেকে P₂ তে কমলে চাহিদা Q₁ থেকে Q₂ তে বৃদ্ধি পায়</text>
+              </svg>
+            </div>
+            <p class="diagram-caption">চিত্র: চাহিদা রেখা</p>
+            <div class="sec-label">📝 ব্যাখ্যা</div>
+            <p>চিত্রে OX অক্ষে চাহিদার পরিমাণ (Q) এবং OY অক্ষে দাম (P) নির্দেশ করে। দাম যখন P₁ তখন চাহিদার পরিমাণ Q₁, যা a বিন্দু দ্বারা নির্দেশিত। দাম কমে P₂ হলে চাহিদার পরিমাণ বেড়ে Q₂ হয়, যা b বিন্দু দ্বারা নির্দেশিত। a ও b বিন্দু সংযোগকারী D রেখাটি হলো চাহিদা রেখা। এই রেখাটি বাম থেকে ডান দিকে নিম্নগামী, অর্থাৎ এর ঢাল ঋণাত্মক, যা দাম ও চাহিদার মধ্যেকার বিপরীতমুখী সম্পর্ক নির্দেশ করে।</p>
           </div>
           <div class="conclusion-box">
             <div class="sec-label">উপসংহার</div>
@@ -1310,13 +1605,12 @@
           </div>
         </div>
       </details>
-      <details class="qcard needs-diagram" id="q-12" data-chapter="2">
+      <details class="qcard diagram-added" id="q-12" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.10: জোগান বিধিটি ব্যাখ্যা কর। জোগান বিধি সমালোচনাসহ আলোচনা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
-          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি পণ্যের বাজারে দাম ও উৎপাদকের বিক্রয়ের ইচ্ছার মধ্যে একটি স্বাভাবিক সম্পর্ক রয়েছে। এই সম্পর্কটি ব্যাখ্যা করার জন্যই জোগান বিধির ধারণা ব্যবহার করা হয়, যা বাজারে দাম নির্ধারণে গুরুত্বপূর্ণ ভূমিকা রাখে।</p>
@@ -1325,6 +1619,36 @@
             <h3 class="sub-title">সংজ্ঞা</h3>
             <p>জোগান বিধি অনুযায়ী, অন্যান্য সব বিষয় অপরিবর্তিত থাকলে, একটি পণ্যের দাম বাড়লে তার জোগানকৃত পরিমাণও বাড়ে, আর দাম কমলে জোগানকৃত পরিমাণও কমে। অর্থাৎ দাম ও জোগানকৃত পরিমাণের মধ্যে সরাসরি বা ধনাত্মক সম্পর্ক বিদ্যমান।</p>
 <p>উদাহরণস্বরূপ, বাজারে চালের দাম বেড়ে গেলে কৃষক ও ব্যবসায়ীরা বেশি মুনাফার আশায় বেশি পরিমাণে চাল বাজারে সরবরাহ করতে আগ্রহী হন, ফলে জোগানকৃত পরিমাণ বৃদ্ধি পায়।</p>
+            <div class="sec-label">🖼️ চিত্র</div>
+            <div class="diagram-box">
+              <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="জোগান রেখা ঊর্ধ্বগামী হওয়ার চিত্র">
+                <text x="240" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali','Noto Sans Bengali',serif">জোগান রেখা (Supply Curve)</text>
+                <line x1="70" y1="280" x2="440" y2="280" stroke="#2a2320" stroke-width="2"/>
+                <line x1="70" y1="280" x2="70" y2="40" stroke="#2a2320" stroke-width="2"/>
+                <polygon points="440,280 430,275 430,285" fill="#2a2320"/>
+                <polygon points="70,40 65,50 75,50" fill="#2a2320"/>
+                <text x="470" y="284" text-anchor="end" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">X-অক্ষ: পরিমাণ (Q)</text>
+                <text x="80" y="48" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Y-অক্ষ: দাম (P)</text>
+                <path d="M 110 250 Q 260 175 400 70" fill="none" stroke="#2f6b4f" stroke-width="3"/>
+                <text x="403" y="65" font-size="14" font-weight="700" fill="#2f6b4f" font-family="'Noto Serif Bengali',serif">S</text>
+                <circle cx="180" cy="225" r="4" fill="#c8973a" stroke="#5c1620"/>
+                <line x1="180" y1="225" x2="180" y2="280" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="70" y1="225" x2="180" y2="225" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="55" y="229" text-anchor="end" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">P₁</text>
+                <text x="180" y="296" text-anchor="middle" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Q₁</text>
+                <text x="188" y="220" font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">a</text>
+                <circle cx="330" cy="120" r="4" fill="#c8973a" stroke="#5c1620"/>
+                <line x1="330" y1="120" x2="330" y2="280" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="70" y1="120" x2="330" y2="120" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="55" y="124" text-anchor="end" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">P₂</text>
+                <text x="330" y="296" text-anchor="middle" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Q₂</text>
+                <text x="338" y="115" font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">b</text>
+                <text x="240" y="312" text-anchor="middle" font-size="12" fill="#2f6b4f" font-family="'Noto Sans Bengali',sans-serif">দাম P₁ থেকে P₂ তে বাড়লে জোগান Q₁ থেকে Q₂ তে বৃদ্ধি পায়</text>
+              </svg>
+            </div>
+            <p class="diagram-caption">চিত্র: জোগান রেখা</p>
+            <div class="sec-label">📝 ব্যাখ্যা</div>
+            <p>চিত্রে OX অক্ষে জোগানের পরিমাণ (Q) এবং OY অক্ষে দাম (P) নির্দেশ করে। দাম যখন P₁ তখন জোগানের পরিমাণ Q₁, যা a বিন্দু দ্বারা নির্দেশিত। দাম বেড়ে P₂ হলে জোগানের পরিমাণ বেড়ে Q₂ হয়, যা b বিন্দু দ্বারা নির্দেশিত। a ও b বিন্দু সংযোগকারী S রেখাটি হলো জোগান রেখা। এই রেখাটি বাম থেকে ডান দিকে ঊর্ধ্বগামী, অর্থাৎ এর ঢাল ধনাত্মক, যা দাম ও জোগানের মধ্যেকার সমমুখী সম্পর্ক নির্দেশ করে।</p>
           </div>
           <div class="sub-section">
             <h3 class="sub-title">সমালোচনাসমূহ</h3>
@@ -1351,13 +1675,12 @@
           </div>
         </div>
       </details>
-      <details class="qcard needs-diagram" id="q-13" data-chapter="2">
+      <details class="qcard diagram-added" id="q-13" data-chapter="2">
         <summary class="qsummary">
           <span class="qtext">2.14: চাহিদা ও জোগান রেখার সাহায্যে কীভাবে বাজার ভারসাম্য নির্ধারিত হয় - ব্যাখ্যা কর।</span>
           <span class="chev">▼</span>
         </summary>
         <div class="qbody">
-          <div class="diagram-pending-banner">⚠️ এই প্রশ্নে চিত্র/গ্রাফ যোগ করা এখনও বাকি — উত্তর সম্পূর্ণ নয়।</div>
           <div class="intro-box">
             <div class="sec-label">ভূমিকা</div>
             <p>একটি স্বাধীন বাজারে দাম নির্ধারণে চাহিদা ও জোগান উভয়েরই গুরুত্বপূর্ণ ভূমিকা রয়েছে। এই দুইয়ের মিথস্ক্রিয়ার মাধ্যমেই একটি নির্দিষ্ট দাম ও পরিমাণে বাজার স্থিতিশীল অবস্থায় পৌঁছায়, যাকে বাজার ভারসাম্য বলা হয়। এই প্রক্রিয়া বোঝা বাজার ব্যবস্থার কার্যপ্রণালী বিশ্লেষণে অত্যন্ত গুরুত্বপূর্ণ।</p>
@@ -1365,6 +1688,32 @@
           <div class="sub-section">
             <h3 class="sub-title">সংজ্ঞা</h3>
             <p>বাজার ভারসাম্য হলো এমন একটি অবস্থা, যেখানে কোনো পণ্যের চাহিদাকৃত পরিমাণ ও জোগানকৃত পরিমাণ পরস্পর সমান হয়। এই অবস্থায় যে দাম বিদ্যমান থাকে, তাকে ভারসাম্য দাম এবং যে পরিমাণ ক্রয়-বিক্রয় হয়, তাকে ভারসাম্য পরিমাণ বলে।</p>
+            <div class="sec-label">🖼️ চিত্র</div>
+            <div class="diagram-box">
+              <svg viewBox="0 0 480 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="চাহিদা ও জোগান রেখার সাহায্যে বাজার ভারসাম্যের চিত্র">
+                <text x="240" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali','Noto Sans Bengali',serif">বাজার ভারসাম্য (Market Equilibrium)</text>
+                <line x1="70" y1="290" x2="440" y2="290" stroke="#2a2320" stroke-width="2"/>
+                <line x1="70" y1="290" x2="70" y2="40" stroke="#2a2320" stroke-width="2"/>
+                <polygon points="440,290 430,285 430,295" fill="#2a2320"/>
+                <polygon points="70,40 65,50 75,50" fill="#2a2320"/>
+                <text x="470" y="294" text-anchor="end" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">X-অক্ষ: পরিমাণ (Q)</text>
+                <text x="80" y="48" font-size="13" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Y-অক্ষ: দাম (P)</text>
+                <path d="M 110 70 Q 255 175 400 260" fill="none" stroke="#7a1f2b" stroke-width="3"/>
+                <text x="403" y="255" font-size="14" font-weight="700" fill="#7a1f2b" font-family="'Noto Serif Bengali',serif">D</text>
+                <path d="M 110 260 Q 255 175 400 70" fill="none" stroke="#2f6b4f" stroke-width="3"/>
+                <text x="403" y="65" font-size="14" font-weight="700" fill="#2f6b4f" font-family="'Noto Serif Bengali',serif">S</text>
+                <circle cx="255" cy="175" r="5" fill="#c8973a" stroke="#5c1620" stroke-width="1.5"/>
+                <line x1="255" y1="175" x2="255" y2="290" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <line x1="70" y1="175" x2="255" y2="175" stroke="#5a5049" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="55" y="179" text-anchor="end" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Pₑ</text>
+                <text x="255" y="306" text-anchor="middle" font-size="12" fill="#2a2320" font-family="'Noto Sans Bengali',sans-serif">Qₑ</text>
+                <text x="266" y="168" font-size="12" font-weight="700" fill="#5c1620" font-family="'Noto Serif Bengali',serif">E</text>
+                <text x="240" y="326" text-anchor="middle" font-size="12" fill="#2f6b4f" font-family="'Noto Sans Bengali',sans-serif">D ও S রেখার ছেদবিন্দু E-ই বাজার ভারসাম্য নির্দেশ করে</text>
+              </svg>
+            </div>
+            <p class="diagram-caption">চিত্র: বাজার ভারসাম্য</p>
+            <div class="sec-label">📝 ব্যাখ্যা</div>
+            <p>চিত্রে OX অক্ষে পরিমাণ (Q) এবং OY অক্ষে দাম (P) নির্দেশ করে। D রেখাটি চাহিদা রেখা এবং S রেখাটি জোগান রেখা নির্দেশ করে। এই দুটি রেখার ছেদবিন্দু E-তে বাজারে চাহিদার পরিমাণ ও জোগানের পরিমাণ পরস্পর সমান হয়। এই বিন্দু দ্বারা নির্দেশিত দাম Pₑ-কে ভারসাম্য দাম এবং পরিমাণ Qₑ-কে ভারসাম্য পরিমাণ বলা হয়। এই দাম ও পরিমাণেই বাজারে ভারসাম্য প্রতিষ্ঠিত হয়, অর্থাৎ ক্রেতা ও বিক্রেতা উভয়েই সন্তুষ্ট থাকে।</p>
           </div>
           <div class="sub-section">
             <h3 class="sub-title">ব্যাখ্যা</h3>
