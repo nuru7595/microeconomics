@@ -1,4 +1,4 @@
-const CACHE_NAME = 'micro-notes-v6';
+const CACHE_NAME = 'micro-notes-v7';
 const FILES_TO_CACHE = [
   './',
   './index.html',
