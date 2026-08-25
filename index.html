@@ -260,13 +260,19 @@
       color: var(--ink-soft);
     }
 
+    .qactions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
     .done-bottom-btn {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      width: 100%;
-      margin-top: 18px;
+      flex: 1 1 160px;
       padding: 13px 16px;
       background: #e9f3ec;
       border: 1.5px solid #bfe0cc;
@@ -291,6 +297,53 @@
       background: var(--green);
       color: #fff;
       border-color: var(--green);
+    }
+
+    .revise-bottom-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex: 1 1 160px;
+      padding: 13px 16px;
+      background: #fbf1dd;
+      border: 1.5px solid var(--gold);
+      border-radius: 12px;
+      color: #8a6a1f;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.15s ease, transform 0.1s ease;
+      font-family: inherit;
+    }
+
+    .revise-bottom-btn:hover {
+      background: #f5e6c0;
+    }
+
+    .revise-bottom-btn:active {
+      transform: scale(0.98);
+    }
+
+    .revision-count-line {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      text-align: center;
+    }
+
+    .revision-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 9px;
+      border-radius: 20px;
+      background: #fbf1dd;
+      border: 1px solid var(--gold);
+      color: #8a6a1f;
+      font-size: 0.72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .toc-num {
@@ -7052,6 +7105,61 @@
 
         let doneState = loadDone();
 
+        const REVISION_KEY = 'micro-notes-revision-v1';
+
+        function loadRevision() {
+          try {
+            const raw = localStorage.getItem(REVISION_KEY);
+            return raw ? JSON.parse(raw) : {};
+          } catch (e) {
+            return {};
+          }
+        }
+
+        function saveRevision(state) {
+          try {
+            localStorage.setItem(REVISION_KEY, JSON.stringify(state));
+          } catch (e) { }
+        }
+
+        let revisionState = loadRevision();
+
+        function updateRevisionBadge(id) {
+          const count = revisionState[id] || 0;
+          const tocBadge = document.querySelector(`.toc-item[data-target="${id}"] .revision-badge`);
+          if (tocBadge) {
+            tocBadge.textContent = count > 0 ? `🔁 ${count}` : '';
+            tocBadge.classList.toggle('hidden', count === 0);
+          }
+          const card = document.getElementById(id);
+          if (card) {
+            const summaryBadge = card.querySelector('.qsummary .revision-badge');
+            if (summaryBadge) {
+              summaryBadge.textContent = count > 0 ? `🔁 ${count}` : '';
+              summaryBadge.classList.toggle('hidden', count === 0);
+            }
+            const line = card.querySelector('.revision-count-line');
+            if (line) {
+              line.textContent = count > 0
+                ? `এই প্রশ্নটি এখন পর্যন্ত ${count} বার রিভিশন দেওয়া হয়েছে।`
+                : '';
+            }
+          }
+        }
+
+        function markRevised(id) {
+          revisionState[id] = (revisionState[id] || 0) + 1;
+          saveRevision(revisionState);
+          updateRevisionBadge(id);
+          const card = document.getElementById(id);
+          if (card) {
+            card.open = false;
+            requestAnimationFrame(() => {
+              card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+          }
+        }
+
         function updateProgress() {
           const doneCount = Object.values(doneState).filter(Boolean).length;
           const pct = totalCount ? Math.round((doneCount / totalCount) * 100) : 0;
@@ -7116,6 +7224,11 @@
             setDone(id, cb.checked);
           });
           item.insertBefore(cb, item.firstChild);
+
+          const revBadge = document.createElement('span');
+          revBadge.className = 'revision-badge hidden';
+          revBadge.title = 'রিভিশন সংখ্যা';
+          item.appendChild(revBadge);
         });
 
         allCards.forEach(card => {
@@ -7134,23 +7247,52 @@
             setDone(id, cb.checked);
           });
           summary.insertBefore(cb, summary.firstChild);
+
+          const revBadge = document.createElement('span');
+          revBadge.className = 'revision-badge hidden';
+          revBadge.title = 'রিভিশন সংখ্যা';
+          const chev = summary.querySelector('.chev');
+          if (chev) {
+            summary.insertBefore(revBadge, chev);
+          } else {
+            summary.appendChild(revBadge);
+          }
         });
 
         allCards.forEach(card => {
           const id = card.id;
           const qbody = card.querySelector('.qbody');
           if (!qbody) return;
-          const btn = document.createElement('button');
-          btn.type = 'button';
-          btn.className = 'done-bottom-btn';
-          if (doneState[id]) btn.classList.add('is-marked');
-          btn.textContent = doneState[id]
+
+          const actions = document.createElement('div');
+          actions.className = 'qactions';
+
+          const doneBtn = document.createElement('button');
+          doneBtn.type = 'button';
+          doneBtn.className = 'done-bottom-btn';
+          if (doneState[id]) doneBtn.classList.add('is-marked');
+          doneBtn.textContent = doneState[id]
             ? '✅ সম্পন্ন হয়েছে (আনমার্ক করতে ক্লিক করুন)'
             : '✓ পড়া শেষ, সম্পন্ন হিসেবে চিহ্নিত করি';
-          btn.addEventListener('click', function () {
+          doneBtn.addEventListener('click', function () {
             setDone(id, !doneState[id]);
           });
-          qbody.appendChild(btn);
+
+          const reviseBtn = document.createElement('button');
+          reviseBtn.type = 'button';
+          reviseBtn.className = 'revise-bottom-btn';
+          reviseBtn.textContent = '🔁 রিভিশন দিলাম';
+          reviseBtn.addEventListener('click', function () {
+            markRevised(id);
+          });
+
+          actions.appendChild(doneBtn);
+          actions.appendChild(reviseBtn);
+          qbody.appendChild(actions);
+
+          const countLine = document.createElement('div');
+          countLine.className = 'revision-count-line';
+          qbody.appendChild(countLine);
         });
 
         const resetBtn = document.getElementById('resetDone');
@@ -7165,6 +7307,7 @@
         }
 
         allCards.forEach(card => applyVisual(card.id, !!doneState[card.id]));
+        allCards.forEach(card => updateRevisionBadge(card.id));
         updateProgress();
       })();
     </script>
